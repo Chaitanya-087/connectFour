@@ -29,3 +29,4 @@ Rules
 Team Members
 ------
 - Jonnadula Chaitanya sai srikrishna
+- Ameena Juhi
