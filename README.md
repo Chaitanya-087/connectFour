@@ -25,3 +25,7 @@ Rules
    squares.
 -  When you can connect four pieces vertically, horizontally or
    diagonally you win otherwise you lose.
+
+Team Member
+------
+- Jonnadula Chaitanya sai srikrishna
