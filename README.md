@@ -30,4 +30,5 @@ Team Members
 ------
 - Jonnadula Chaitanya sai srikrishna
 - Ameena Juhi
+- Gajula Saisri
 - Gaddam Likhitheshwar
