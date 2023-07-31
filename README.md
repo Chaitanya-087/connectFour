@@ -24,7 +24,7 @@ Rules
    the introduced piece may be placed at most on seven different
    squares.
 -  When you can connect four pieces vertically, horizontally or
-   diagonally you win otherwise you lose.
+   diagonally you will win otherwise you lose.
 
 Team Members
 ------
@@ -32,3 +32,4 @@ Team Members
 - Ameena Juhi
 - Gajula Saisri
 - Gaddam Likhitheshwar
+- Hyndavi
