@@ -29,9 +29,5 @@ Rules
 Team Members
 ------
 - Jonnadula Chaitanya sai srikrishna
-<<<<<<< HEAD
 - Gajula Saisri
-
-=======
 - Gaddam Likhitheshwar
->>>>>>> 5b26c0c4d0bcd93a64cd41e05cb353ed8f22b760
