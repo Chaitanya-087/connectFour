@@ -90,7 +90,7 @@ public class ConnectFourView {
     }
     
     public void updateBoard(int col, char player) {
-    	//boolean isWin = model.checkWin();
+    	boolean isWin = model.checkWin();
 		if (model.checkWin()) {
 			System.out.println(player + " wins!");
 			//code to reset everything and print a victory screen
