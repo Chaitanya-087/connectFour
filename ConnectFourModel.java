@@ -45,12 +45,10 @@ public class ConnectFourModel {
     }
     
     public boolean isValid(int col) {
-    	if (col < 0 || col >= board.length) 
-			 return false;
-    	else if (board[0][col]!=' ')
-			 return false;
-    	else
-		     return true;
+    	    if (col < 0 || col >= COLUMNS) 
+        return false;
+    // Check if the top row of the column is empty, indicating a valid move
+    return board[0][col] == ' ';
     }
     
     public boolean checkWin() {
