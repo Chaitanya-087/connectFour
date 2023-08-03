@@ -8,8 +8,7 @@ public class ConnectFourController {
     }
 
     public void handlePlayerMove(int col) {
-        model.makeMove(col);
-		model.switchPlayer();    
+        model.makeMove(col);  
     }
     
 }

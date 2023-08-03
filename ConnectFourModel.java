@@ -1,5 +1,7 @@
 package mvc;
 
+
+
 public class ConnectFourModel {
     private static final int ROWS = 6;
     private static final int COLUMNS = 7;
@@ -12,7 +14,7 @@ public class ConnectFourModel {
         initializeBoard();
     }
 
-    private void initializeBoard() {
+    public void initializeBoard() {
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLUMNS; col++) {
                 board[row][col] = ' ';
@@ -104,5 +106,6 @@ public class ConnectFourModel {
     public void switchPlayer() {
         currentPlayer = currentPlayer == 'X' ? 'O' : 'X';
     }
+    
 }
 

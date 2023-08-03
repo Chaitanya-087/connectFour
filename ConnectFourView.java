@@ -2,18 +2,22 @@ package mvc;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javafx.animation.SequentialTransition;
+import javafx.scene.text.Font;
 import javafx.animation.TranslateTransition;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Shape;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
 public class ConnectFourView {
@@ -23,19 +27,19 @@ public class ConnectFourView {
     private static final Color BOARD_COLOR = Color.rgb(138, 43, 226);
     private static final Color PLAYER_ONE_COLOR = Color.RED;
     private static final Color PLAYER_TWO_COLOR = Color.YELLOW;
-    private SequentialTransition sequentialTransition = new SequentialTransition();
+    
     private GridPane gridPane = new GridPane();
     private StackPane board;
     private Scene scene;
     private HBox clickableColumns;
     private ConnectFourController controller;
     private ConnectFourModel model;
-    private Circle animationCircle = new Circle(TILE_SIZE / 2);
+    private VBox vertical;
+    private Text playerTurn;
     
     public ConnectFourView(ConnectFourModel model, ConnectFourController controller) {
         this.controller = controller;
         this.model = model;
-        
         initializeComponents();
     }
 
@@ -44,23 +48,56 @@ public class ConnectFourView {
     }
 
     private void initializeComponents() {
-        board = new StackPane();
-        clickableColumns = new HBox(4);
-        board.getChildren().add(gridPane);
-        board.getChildren().add(setupBoardBackground());
-        board.getChildren().add(clickableColumns);
-        clickableColumns.getChildren().addAll(getColumns());
-        clickableColumns.setAlignment(Pos.CENTER);
-//        clickableColumns.
-        gridPane.setHgap(4.3);
-        gridPane.setVgap(4.3);
-        gridPane.setAlignment(Pos.CENTER);
-        scene = new Scene(board);
-        scene.setFill(BOARD_COLOR);
-        createBoardCircles();
+    	vertical = new VBox(5);
+    	
+		Text title = new Text("\nFour in a Line Rules");
+		Font titleFont = Font.font("Brush Script MT", FontWeight.BOLD,24);
+		title.setFont(titleFont);
+		title.setFill(Color.WHITE);
+
+		Text rules = new Text("1. Point the cursor over the row you wish to drop ur piece in." + " \n2. Left click to dropo your piece."
+		  + "\n3. When you can connect four pieces vertically, horizontally and diagonally you win.");
+		Font rulesFont = Font.font("Verdana", FontWeight.LIGHT, 18);
+		rules.setFont(rulesFont);
+		rules.setFill(Color.WHITE);
+		
+		TextFlow textFlow = new TextFlow();
+		textFlow.setMaxWidth(900);
+		textFlow.setTextAlignment(TextAlignment.CENTER);
+		textFlow.getChildren().add(title);
+		  
+		TextFlow textFlow1 = new TextFlow();
+		textFlow1.getChildren().add(rules);
+		textFlow1.setMaxWidth(900);
+      
+		board = new StackPane();
+		clickableColumns = new HBox(4);
+		clickableColumns.getChildren().addAll(getColumns());
+		clickableColumns.setAlignment(Pos.CENTER);
+		
+		board.getChildren().add(gridPane);
+		board.getChildren().add(createRectangleWithHoles());
+		board.getChildren().add(clickableColumns);
+		
+		vertical.getChildren().add(board);
+		vertical.getChildren().add(textFlow);
+		vertical.getChildren().add(textFlow1);
+		vertical.setAlignment(Pos.CENTER);
+		
+		gridPane.setHgap(4.3);
+		gridPane.setVgap(4.3);
+		gridPane.setAlignment(Pos.CENTER);
+		
+		scene = new Scene(vertical);
+		scene.setFill(Color.rgb(48,48,48));
+		createBoardCircles();
+		
+		playerTurn =  new Text();
+		playerTurn.setFill(Color.WHITE);
+		
     }
 
-    private Shape setupBoardBackground() {        
+    private Shape createRectangleWithHoles() {        
         Rectangle rect = new Rectangle((COLUMNS + 1) * TILE_SIZE, (ROWS + 1) * TILE_SIZE);
         rect.setArcHeight(20);
         rect.setArcWidth(20);
@@ -77,11 +114,11 @@ public class ConnectFourView {
                 shape = Shape.subtract(shape, circle);
             }
         }
-        shape.setFill(Color.WHITE);
-        shape.setStroke(Color.BLACK);
-        shape.setStrokeWidth(2);
+        shape.setFill(Color.BLACK);
+        shape.setStroke(Color.WHITE);
         return shape;
     }
+    
     private List<Rectangle> getColumns() {
     	List<Rectangle> columns = new ArrayList<>();
     	for (int x = 0; x < COLUMNS; x++) {
@@ -90,9 +127,9 @@ public class ConnectFourView {
     		rect.setOnMouseEntered(e -> rect.setFill(Color.rgb(100, 100, 100, 0.5)));
     		rect.setOnMouseExited(e -> rect.setFill(Color.TRANSPARENT));
     		final int finalCol = x;
+    		
     		rect.setOnMouseClicked(e -> {
-    			controller.handlePlayerMove(finalCol);
-    			refreshBoard();
+    			updateBoard(finalCol, model.getCurrentPlayer());
     		});
     		columns.add(rect);
     	}
@@ -103,130 +140,50 @@ public class ConnectFourView {
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLUMNS; col++) {
                 Circle circle = new Circle(TILE_SIZE / 2);
-                circle.setFill(BOARD_COLOR);
+                circle.setFill(Color.rgb(48,48,48));
                 circle.setStroke(Color.BLACK);
                 gridPane.add(circle,col,row);
                 
             }
         }
     }
-//    public void animateDrop() {
-//    	char[][] boardData = model.getBoard().clone();
-//    	
-//    	for (int row = 0; row < ROWS; row++) {
-//    		for (int col = 0; col < COLUMNS; col++) {
-//    			char player = boardData[row][col];
-//    			if (player != ' ') {	
-//    				animationCircle = new Circle(TILE_SIZE / 2 , player == 'X' ? PLAYER_ONE_COLOR : PLAYER_TWO_COLOR);
-//    				animationCircle.setTranslateY(-TILE_SIZE * (ROWS + 1));
-//    				gridPane.add(animationCircle, col, row);
-//    				TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), animationCircle);
-//    				transition.setToY((ROWS - 1 - row) * TILE_SIZE);
-//    				transition.setOnFinished(e -> {
-//    					animationCircle.setTranslateY(0);
-//    					gridPane.getChildren().remove(animationCircle);
-//    				});
-//    			}
-//    		}
-//    	} 
-//    }
-    public void refreshBoard() {
-        char[][] boardData = model.getBoard().clone();
-        ArrayList<Circle> animationCircles = new ArrayList<>();
-        for (int row = 0; row <  ROWS; row++) {
-        for (int col = 0; col < COLUMNS; col++) {
-            char disc = boardData[row][col];
-            if (disc != ' ') {
-                Color discColor = disc == 'X' ? PLAYER_ONE_COLOR : PLAYER_TWO_COLOR;
-                Circle animationCircle = new Circle(TILE_SIZE / 2, discColor);
-                animationCircles.add(animationCircle);
-                gridPane.add(animationCircle, col, row);
-                double startY = -TILE_SIZE * (ROWS - row); // Start from above the grid
-                double endY = 0; // The final position within the grid
-                
-                TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), animationCircle);
-                transition.setFromY(startY);
-                transition.setToY(endY);
-                transition.play();
-
-                final int finalCol = col;
-                final int finalRow = row;
-                
-                transition.setOnFinished(e -> {                    
-                    Circle circle = new Circle(TILE_SIZE / 2, discColor);
-                    gridPane.add(circle, finalCol, finalRow); 
-                });
-            }
-        }
+    
+    public void updateBoard(int col, char player) {	
+    	if(model.isValid(col)) {
+    		int row = model.getEmptyRowforColumn(col);
+    		Color discColor = player == 'X' ? PLAYER_ONE_COLOR : PLAYER_TWO_COLOR;
+    		Circle animationCircle = new Circle(TILE_SIZE / 2, discColor);
+    		gridPane.add(animationCircle, col, row); 
+    		
+    		TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), animationCircle);
+    		transition.setFromY(-TILE_SIZE * (ROWS + 1));
+    		transition.setToY((ROWS - 1 - row) * TILE_SIZE);
+    		transition.play();
+    		
+    		transition.setOnFinished(event -> {
+    			gridPane.getChildren().remove(animationCircle);
+    			Circle circle = new Circle(TILE_SIZE / 2, discColor);
+    			gridPane.add(circle, col, row);
+    			
+    			if (model.checkWin()) {
+    				
+    				return;
+    			} else {
+    				model.switchPlayer();
+    			}
+    			
+    			controller.handlePlayerMove(col);
+    		});
+    		
+    	} else {
+    		System.out.println("not valid!!");
+    	}
+	
     }
-        
-}
-
-
-// public void refreshBoard() {
-//    char[][] boardData = model.getBoard().clone();
-//    for (int row = 0; row < ROWS; row++) {
-//        for (int col = 0; col < COLUMNS; col++) {
-//            char disc = boardData[row][col];
-//            if (disc != ' ') {
-//                Color discColor = disc == 'X' ? PLAYER_ONE_COLOR : PLAYER_TWO_COLOR;
-//                animateDiscDrop(col, discColor);
-//            }
-//        }
-//    }
-//}
-//
-//private void animateDiscDrop(int col, Color discColor) {
-//    animationCircle = new Circle(TILE_SIZE / 2, discColor);
-//    animationCircle.setTranslateY(-TILE_SIZE * (ROWS + 1));
-//    gridPane.add(animationCircle, col, model.getEmptyRowforColumn(col));
-//
-//    TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5), animationCircle);
-//    transition.setToY((ROWS - 1 - model.getEmptyRowforColumn(col)) * TILE_SIZE);
-//    transition.setOnFinished(e -> {
-//        animationCircle.setTranslateY(0);
-//        gridPane.getChildren().remove(animationCircle);
-//        refreshBoardComplete(col, discColor);
-//    });
-//    transition.play();
-//}
-//
-//private void refreshBoardComplete(int col, Color discColor) {
-//    char[][] boardData = model.getBoard().clone();
-//    for (int row = 0; row < ROWS; row++) {
-//        char disc = boardData[row][col];
-//        if (disc != ' ') {
-//            Circle circle = new Circle(TILE_SIZE / 2, discColor);
-//            gridPane.add(circle, col, row);
-//        }
-//    }
-//}
-
-//    public void updateBoard(int col, char player) {
-//    	//boolean isWin = model.checkWin();
-//		if (model.checkWin()) {
-//			System.out.println(player + " wins!");
-//			//code to reset everything and print a victory screen
-//			return;
-//		} 
-//	
-//    	if(model.isValid(col)) {
-//    		int row = model.getEmptyRowforColumn(col);
-//    		Circle circle = new Circle(TILE_SIZE / 2, player == 'X' ? PLAYER_ONE_COLOR : PLAYER_TWO_COLOR);
-//    		gridPane.add(circle, col, row);
-//    		controller.handlePlayerMove(col);
-//    		if (model.checkWin())
-//    			System.out.println(player + "wins!");
-//    		//code to reset everything and print a victory screen
-//    	} else {
-//    		System.out.println("not valid!!");
-//    	}
-//	
-//    }
-//    
     
     public void resetBoard() {
         gridPane.getChildren().clear();
         initializeComponents();
     }
+    
 }
