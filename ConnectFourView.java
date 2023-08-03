@@ -101,10 +101,10 @@ public class ConnectFourView {
     		int row = model.getEmptyRowforColumn(col);
     		Circle circle = new Circle(TILE_SIZE / 2, player == 'X' ? PLAYER_ONE_COLOR : PLAYER_TWO_COLOR);
     		gridPane.add(circle, col, row);
-    		controller.handlePlayerMove(col);
     		if (model.checkWin())
     			System.out.println(player + "wins!");
     		//code to reset everything and print a victory screen
+    		controller.handlePlayerMove(col);
     	} else {
     		System.out.println("not valid!!");
     	}
