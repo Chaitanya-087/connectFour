@@ -1,13 +1,10 @@
 package mvc;
 
-
-
 public class ConnectFourModel {
     private static final int ROWS = 6;
     private static final int COLUMNS = 7;
     private char[][] board;
     private char currentPlayer;
-//    private boolean gameOver = false;
     
     public ConnectFourModel() {
         board = new char[ROWS][COLUMNS];
