@@ -177,6 +177,8 @@ public class ConnectFourView {
     			controller.handlePlayerMove(col);
     		});
     		
+    	} else if(model.checkWin()) {
+    		playerTurn.setText("win!!");
     	} else {
     		System.out.println("not valid!!");
     	}
