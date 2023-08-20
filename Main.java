@@ -7,8 +7,10 @@ public class Main extends Application {
 	@Override
     public void start(Stage primaryStage) {
 		ConnectFourModel model = new ConnectFourModel();
-		ConnectFourController controller = new ConnectFourController(model);
-		ConnectFourView view = new ConnectFourView(model, controller);
+		ConnectFourView view = new ConnectFourView();
+		
+		ConnectFourController controller = new ConnectFourController(model,view);
+		view.setController(controller);
 		
         primaryStage.setScene(view.getScene());
         primaryStage.setTitle("Connect Four");
